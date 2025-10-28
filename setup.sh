@@ -33,13 +33,9 @@ python3.12 -m venv llm-for-nuts-venv
 echo "Activating virtual environment..."
 source llm-for-nuts-venv/bin/activate
 
-# Install dependencies
-echo "Installing dependencies..."
+# Install dependencies from requirements.txt
+echo "Installing dependencies from requirements.txt..."
 pip install -r requirements.txt
-
-# Install Jupyter kernel packages
-echo "Installing Jupyter kernel packages..."
-pip install ipykernel jupyter
 
 # Register the virtual environment as a Jupyter kernel
 echo "Registering virtual environment as Jupyter kernel..."

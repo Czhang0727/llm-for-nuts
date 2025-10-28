@@ -1,4 +1,5 @@
-# Add your project dependencies here
-# Example:
-# requests>=2.25.1
-# numpy>=1.21.0
+# Core dependencies for LLM learning project
+torch>=2.0.0
+numpy>=1.21.0
+jupyter>=1.0.0
+ipykernel>=6.0.0
