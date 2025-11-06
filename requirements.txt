@@ -3,3 +3,10 @@ torch>=2.0.0
 numpy>=1.21.0
 jupyter>=1.0.0
 ipykernel>=6.0.0
+
+# OpenAI Python SDK
+openai>=1.0.0
+requests>=2.31.0
+
+# Qwen/Dashscope SDK
+dashscope>=1.0.0
