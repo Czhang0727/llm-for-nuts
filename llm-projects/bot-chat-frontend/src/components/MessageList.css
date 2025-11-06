@@ -1,0 +1,21 @@
+.MessageList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem 0;
+}
+
+.MessageList-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: #666;
+  font-style: italic;
+}
+
+.MessageList-empty p {
+  text-align: center;
+  padding: 2rem;
+}
+
