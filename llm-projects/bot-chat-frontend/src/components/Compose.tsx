@@ -13,7 +13,7 @@ function Compose({ value, onChange, onKeyPress, disabled }: ComposeProps): JSX.E
     <input
       type="text"
       className="Compose"
-      placeholder={disabled ? 'Connecting...' : 'Type your message...'}
+      placeholder={disabled ? 'Please wait...' : 'Type your message...'}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       onKeyPress={onKeyPress}

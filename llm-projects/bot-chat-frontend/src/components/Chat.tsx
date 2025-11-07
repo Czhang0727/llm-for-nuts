@@ -11,6 +11,7 @@ function Chat(): JSX.Element {
   const [sessionId, setSessionId] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [error, setError] = useState<string | null>(null)
+  const [isInitializing, setIsInitializing] = useState<boolean>(true)
   const [inputValue, setInputValue] = useState<string>('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
 
@@ -26,19 +27,44 @@ function Chat(): JSX.Element {
   // Initialize session on mount
   useEffect(() => {
     const initializeSession = async (): Promise<void> => {
+      setIsInitializing(true)
+      setError(null)
       try {
         const newSessionId = await createSession()
         setSessionId(newSessionId)
+        setError(null)
       } catch (err) {
-        setError('Failed to initialize chat session')
+        setError(
+          'Backend API not available. Please make sure the backend server is running on http://localhost:5000'
+        )
         console.error('Session initialization error:', err)
+        // Allow typing even without session - we'll try to create session when sending
+      } finally {
+        setIsInitializing(false)
       }
     }
     initializeSession()
   }, [])
 
   const handleSend = async (): Promise<void> => {
-    if (!inputValue.trim() || !sessionId || isLoading) return
+    if (!inputValue.trim() || isLoading) return
+
+    // Try to create session if we don't have one
+    let currentSessionId = sessionId
+    if (!currentSessionId) {
+      try {
+        setIsLoading(true)
+        setError(null)
+        currentSessionId = await createSession()
+        setSessionId(currentSessionId)
+      } catch (err) {
+        setError(
+          'Cannot connect to backend API. Please make sure the backend server is running on http://localhost:5000'
+        )
+        setIsLoading(false)
+        return
+      }
+    }
 
     const userMessage: Message = {
       role: 'user',
@@ -54,7 +80,7 @@ function Chat(): JSX.Element {
     setError(null)
 
     try {
-      const response = await sendMessage(messageText, sessionId)
+      const response = await sendMessage(messageText, currentSessionId)
 
       const botMessage: Message = {
         role: 'assistant',
@@ -64,7 +90,7 @@ function Chat(): JSX.Element {
 
       setMessages((prev) => [...prev, botMessage])
     } catch (err) {
-      setError('Failed to send message. Please try again.')
+      setError('Failed to send message. Please check if the backend API is running.')
       console.error('Send message error:', err)
       // Remove user message if send failed
       setMessages((prev) => prev.filter((msg) => msg !== userMessage))
@@ -102,11 +128,11 @@ function Chat(): JSX.Element {
           value={inputValue}
           onChange={setInputValue}
           onKeyPress={handleKeyPress}
-          disabled={isLoading || !sessionId}
+          disabled={isLoading || isInitializing}
         />
         <SendButton
           onClick={handleSend}
-          disabled={isLoading || !sessionId || !inputValue.trim()}
+          disabled={isLoading || isInitializing || !inputValue.trim()}
         />
       </div>
     </div>

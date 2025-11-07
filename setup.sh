@@ -37,6 +37,14 @@ source llm-for-nuts-venv/bin/activate
 echo "Installing dependencies from requirements.txt..."
 pip install -r requirements.txt
 
+# Install bot-chat-api dependencies
+if [ -f "llm-projects/bot-chat-api/requirements.txt" ]; then
+    echo "Installing bot-chat-api dependencies..."
+    pip install -r llm-projects/bot-chat-api/requirements.txt
+else
+    echo "Warning: bot-chat-api/requirements.txt not found, skipping..."
+fi
+
 # Register the virtual environment as a Jupyter kernel
 echo "Registering virtual environment as Jupyter kernel..."
 python3.12 -m ipykernel install --user --name=llm-for-nuts --display-name="LLM for Nuts (Python 3.12)"
@@ -45,6 +53,10 @@ python3.12 -m ipykernel install --user --name=llm-for-nuts --display-name="LLM f
 echo "Creating notebooks directory..."
 mkdir -p notebooks
 
+echo ""
 echo "Setup complete!"
-echo "To activate the virtual environment in the future, run: source llm-for-nuts-venv/bin/activate"
-echo "To start Jupyter notebook, run: jupyter notebook"
+echo ""
+echo "Next steps:"
+echo "  - To activate the virtual environment: source llm-for-nuts-venv/bin/activate"
+echo "  - To start Jupyter notebook: jupyter notebook"
+echo "  - To initialize bot-chat-api database: cd llm-projects/bot-chat-api && ./create_db.sh"
